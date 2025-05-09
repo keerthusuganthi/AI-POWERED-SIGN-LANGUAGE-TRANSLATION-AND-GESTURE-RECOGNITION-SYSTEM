@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Translator</title>
+
+    <script src="https://kit.fontawesome.com/a658a7b479.js" crossorigin="anonymous"></script>
+
+    <link rel="icon" type="image/png" href="../docs/logo.png">
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: #f1efe2;
+            /* old newspaper background */
+            margin: 0;
+            padding: 40px 20px;
+            color: #222;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto 30px;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .camera-container {
+            width: 300px;
+            height: 200px;
+            background: #000;
+            border: 2px solid #555;
+            flex-shrink: 0;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .text-section {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 1rem;
+            font-family: 'Times New Roman', Times, serif;
+            background: #fff;
+            color: #222;
+            border: 1px solid #555;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #ddd;
+        }
+
+        .text-output {
+            background: #fcf8e3;
+            padding: 30px;
+            border: 1px solid #ccc;
+            color: #222;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-align: justify;
+            column-count: 2;
+            column-gap: 50px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 850px;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <nav class="navbar">
+        <span class="navbar-toggle" id="js-navbar-toggle">
+            <button class="togglebtn" onClick={this.buttonclicked}> <i class="fas fa-bars"></i></button>
+        </span>
+        <h5><a href="../index.html" class="logo">Sign Language <span>Translator</span></a></h5>
+        <ul class="main-nav" id="js-menu">
+            <!-- <li>
+                <a href="../index.html" class="nav-links ">Tutorials</a>
+            </li> -->
+            <li>
+                <a href="./speech.html" class="nav-links">SpeechRecognition</a>
+            </li>
+            <li>
+                <a href="./Training.html" class="nav-links">Training</a>
+            </li>
+
+            <li>
+                <a href="./Model.html" class="nav-links">Dictionary</a>
+            </li>
+
+            <li>
+                <a href="./About.html" class="nav-links orange" style="color: #ff9900;">About</a>
+            </li>
+
+        </ul>
+    </nav>
+
+    <h1>Speech Recognition</h1>
+
+    <div class="main-content">
+        <div class="camera-container">
+            <video id="video" autoplay muted playsinline></video>
+        </div>
+
+        <div class="text-section">
+            <div class="controls">
+                <button id="startBtn">Start Recognition</button>
+                <button id="copyBtn">Copy Text</button>
+                <button id="speakBtn">Speak Text</button>
+                <button id="printBtn">Print Text</button>
+            </div>
+
+            <div class="text-output" id="textOutput"></div>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const startBtn = document.getElementById('startBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const speakBtn = document.getElementById('speakBtn');
+        const textOutput = document.getElementById('textOutput');
+
+        // Start camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error('Camera access error:', err);
+            });
+
+        const awarenessText = `Hello, welcome to DOOR INDIA.
+
+People from different countries and India are frightened, worried, and suffering because of the Coronavirus. Day by day, the death rate is increasing across the world, as the virus is highly dangerous and strong.
+
+I will give you a short explanation on how this virus spreads from person to person, and how we can protect ourselves from being affected.
+
+The virus spreads through saliva — while speaking, coughing, or sneezing. Earlier, we could stand close to one another, but now we must maintain distance. Why? Because standing too close can allow the virus to travel from one person to another.
+
+A minimum of 1-meter distance must be maintained at all times. Whether you're with a friend, at a shop, or with a neighbor — do not stand too close. Keeping this distance helps prevent the virus from spreading, and protects your life.
+
+Now, why should we cover our nose and mouth? When we cough or sneeze, it's essential to cover our face using our elbow or a cloth. If we don't, the discharges from our mouth and nose can spread to others and harm them. Therefore, use a mask, or your elbow or a cloth while coughing or sneezing — to protect others as well.
+
+Wash your hands frequently. It's very important. Don't wash your hands with water alone — use hand sanitizer, soap, or any disinfectant. There are many germs on our hands, and washing for at least 20 seconds helps remove them. Be responsible — it’s vital for your own safety and others too.
+
+Avoid touching things unnecessarily. When we go out to buy something, we touch trolleys, handrails, products, and many other surfaces. A person infected with the virus may have already touched them, and you may not realize it. The discharges from their nose or mouth may be on these surfaces.
+
+Later, if you touch your eyes, nose, or mouth with those same hands, the virus can easily enter your body. So, avoid touching things unnecessarily — and if you do, wash your hands properly with soap.
+
+Why do we wear a mask? Germs are everywhere. When an infected person sneezes, the germs spread around. If you don’t wear a mask, it’s easy for you to get infected. That’s why wearing a mask is one of the most important ways to protect yourself.
+
+So, how can we be careful? Use a mask to prevent the virus from reaching you. I hope you've understood the explanation — please follow all these safety measures, and kindly stay at home.
+
+Thank you for watching.`;
+
+        // Typing word-by-word
+        function typeTextByWord(text, speed = 150) {
+            const words = text.split(' ');
+            textOutput.innerHTML = '';
+            let i = 0;
+            startBtn.disabled = true;
+
+            function typing() {
+                if (i < words.length) {
+                    textOutput.innerHTML += words[i] + ' ';
+                    i++;
+                    setTimeout(typing, speed);
+                } else {
+                    startBtn.disabled = false;
+                    alert('Recognition Completed'); 
+                }
+            }
+
+            typing();
+        }
+
+        startBtn.addEventListener('click', () => {
+            typeTextByWord(awarenessText, 100); // slower word-by-word typing
+        });
+
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(textOutput.textContent)
+                .then(() => alert('Text copied to clipboard!'))
+                .catch(err => alert('Failed to copy text: ' + err));
+        });
+
+        speakBtn.addEventListener('click', () => {
+            const utterance = new SpeechSynthesisUtterance(textOutput.textContent);
+            utterance.lang = 'en-US';
+            window.speechSynthesis.speak(utterance);
+        });
+
+
+
+        const printBtn = document.getElementById('printBtn');
+
+        printBtn.addEventListener('click', () => {
+            const printWindow = window.open('', '', 'width=900,height=700');
+            printWindow.document.write(`
+        <html>
+            <head>
+                <title>Print Text</title>
+                <style>
+                    body {
+                        font-family: 'Georgia', 'Times New Roman', serif;
+                        padding: 40px;
+                        background: #f5f1e3;
+                        color: #222;
+                        font-size: 1.2rem;
+                        line-height: 1.8;
+                        text-align: justify;
+                    }
+                </style>
+            </head>
+            <body>
+                ${textOutput.innerHTML}
+            </body>
+        </html>
+    `);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        });
+
+        let mainNav = document.getElementById('js-menu');
+        let navBarToggle = document.getElementById('js-navbar-toggle');
+
+        navBarToggle.addEventListener('click', function () {
+            mainNav.classList.toggle('active');
+        });
+
+    </script>
+</body>
+
+</html>
